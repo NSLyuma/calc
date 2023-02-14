@@ -1,0 +1,86 @@
+@import '_vars.sass'
+
+*
+  padding: 0
+  margin: 0
+  box-sizing: border-box
+
+html,
+body
+  height: 100%
+
+#root
+  height: 100%
+  background: linear-gradient(122.76deg, #FFA2A2 4.09%, #FF7B7B 91.04%), #FFFFFF
+
+.main
+  height: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+
+.layout
+  max-width: 616px
+  max-height: 876px
+  background-color: rgba(255, 255, 255, .2)
+  border-radius: 18px
+  padding: 38px 31px
+
+.calc
+  background: linear-gradient(155.23deg, #28518E 0%, #3A77D1 100%)
+  box-shadow: 0px 82px 158px rgba(0, 0, 0, 0.35), 0px 24.7206px 47.6324px rgba(0, 0, 0, 0.228056), 0px 10.2677px 19.7841px rgba(0, 0, 0, 0.175), 0px 3.71362px 7.1555px rgba(0, 0, 0, 0.121944)
+  border-radius: 18px
+  padding: 16px 48px 44px
+  width: 554px
+
+.operations,
+.result
+  color: $colorLight
+  display: flex
+  justify-content: end
+
+.operations
+  font-family: $fontM
+  font-size: 24px
+  height: 117px
+  align-items: flex-end
+  margin-bottom: 28px
+
+.result
+  font-family: $fontB
+  font-size: 56px
+  height: 76px
+  align-items: center
+
+.separator
+  height: 2px
+  width: 100%
+  background-color: rgba(255, 255, 255, .35)
+  margin: 18px 0 37px
+
+.buttons
+  display: grid
+  grid-template-columns: repeat(4, 1fr)
+  column-gap: 20px
+  row-gap: 16px
+
+.button
+  font-family: $fontM
+  font-size: 36px
+  border: none
+  background-color: transparent
+  border-radius: 50%
+  width: 80px
+  height: 80px
+  color: $colorLight
+  cursor: pointer
+  transition: background-color, transform, .2s
+  &:hover
+    background-color: rgba(255, 255, 255, .2)
+  &:active
+    transform: scale(.95)
+    background-color: rgba(255, 255, 255, .3)
+
+.equal
+  background-color: #fff
+  color: #2B589A
