@@ -27,7 +27,7 @@ function Calc(): JSX.Element {
       : sign === 'x'
       ? a * b
       : sign === '√'
-      ? Math.sqrt(b)
+      ? a
       : sign === '%'
       ? a
       : sign === '/'
@@ -74,20 +74,6 @@ function Calc(): JSX.Element {
     }));
   };
 
-  const squareClickHandler = () => {
-    const matchNumber = /\d+$/.exec(calc.opString);
-    if (matchNumber) {
-      const lastNumber = matchNumber[0];
-      setCalc((prev) => ({
-        ...calc,
-        sign: '√',
-        res: !calc.res && calc.num ? Math.sqrt(Number(calc.num)) : calc.res,
-        opString:
-          prev.opString.slice(0, -lastNumber.length) + `√(${lastNumber})`,
-      }));
-    }
-  };
-
   const signClickHandler = (btn: string) => {
     if (String(calc.num) === '0' && calc.sign === '/') {
       setCalc({
@@ -122,24 +108,25 @@ function Calc(): JSX.Element {
     }
   };
 
-  const equalsClickHandler = () => {
-    if (calc.sign && calc.num) {
-      setCalc({
+  const squareClickHandler = () => {
+    const matchNumber = /\d+$/.exec(calc.opString);
+    if (matchNumber) {
+      const lastNumber = matchNumber[0];
+      setCalc((prev) => ({
         ...calc,
-        res:
-          String(calc.num) === '0' && calc.sign === '/'
-            ? 'Ошибка'
-            : String(
-                math(
-                  Number(removeSpaces(Number(calc.res))),
-                  Number(removeSpaces(Number(calc.num))),
-                  calc.sign,
-                ),
-              ).slice(0, 14),
-        sign: '',
-        num: 0,
-        opString: '',
-      });
+        num: Math.sqrt(Number(prev.num)),
+        res: String(
+          math(
+            Number(removeSpaces(Number(calc.res))),
+            Number(removeSpaces(Math.sqrt(Number(prev.num)))),
+            calc.sign,
+          ),
+        ).slice(0, 14),
+        sign: '√',
+        opString:
+          prev.opString.slice(0, -lastNumber.length) +
+          String(Math.sqrt(Number(calc.num))).slice(0, 4),
+      }));
     }
   };
 
@@ -180,6 +167,27 @@ function Calc(): JSX.Element {
       res: 0,
       opString: '',
     });
+  };
+
+  const equalsClickHandler = () => {
+    if (calc.sign && calc.num) {
+      setCalc({
+        ...calc,
+        res:
+          String(calc.num) === '0' && calc.sign === '/'
+            ? 'Ошибка'
+            : String(
+                math(
+                  Number(removeSpaces(Number(calc.res))),
+                  Number(removeSpaces(Number(calc.num))),
+                  calc.sign,
+                ),
+              ).slice(0, 11),
+        sign: '',
+        num: 0,
+        opString: '',
+      });
+    }
   };
 
   const calculate = (btn: string) =>
