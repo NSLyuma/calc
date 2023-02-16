@@ -30,7 +30,9 @@ function Calc(): JSX.Element {
       ? Math.sqrt(b)
       : sign === '%'
       ? a
-      : a / b;
+      : sign === '/'
+      ? a / b
+      : b;
 
   const numClickHandler = (btn: string) => {
     if (removeSpaces(Number(calc.num)).length < 11) {
@@ -142,33 +144,24 @@ function Calc(): JSX.Element {
   };
 
   const percentClickHandler = () => {
-    let num = calc.num ? parseFloat(removeSpaces(Number(calc.num))) : 0;
-    let res = calc.res ? parseFloat(removeSpaces(Number(calc.res))) : 0;
-
-    // setCalc((prev) => ({
-    //   ...calc,
-    //   num: (num /= Math.pow(100, 1)),
-    //   res: (res /= Math.pow(100, 1)),
-    //   sign: '%',
-    //   opString: prev.opString + Number(calc.res) / 100,
-    // }));
     setCalc((prev) => ({
       ...calc,
-      num: Number(prev.num) / 100,
+      num: Number(prev.res) / 100,
       res: String(
         math(
-          Number(removeSpaces(Number(prev.num))),
-          Number(removeSpaces(Number(prev.num) / 100)),
+          Number(removeSpaces(Number(calc.res))),
+          Number(removeSpaces(Number(prev.res) / 100)),
           calc.sign,
         ),
       ).slice(0, 14),
+      sign: '%',
       opString: prev.opString
         .split('')
         .reverse()
         .join('')
         .replace(
           String(Number(calc.num)).split('').reverse().join(''),
-          String(Number(prev.num) / 100)
+          String(Number(prev.res) / 100)
             .split('')
             .reverse()
             .join(''),
