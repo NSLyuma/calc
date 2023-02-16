@@ -61,16 +61,7 @@ function Calc(): JSX.Element {
       ...calc,
       num: !calc.num.toString().includes('.') ? prev.num + '.' : calc.num,
       opString: prev.opString + '.',
-      res:
-        !calc.res && calc.num
-          ? calc.num
-          : String(
-              math(
-                Number(removeSpaces(Number(calc.res))),
-                Number(removeSpaces(Number(calc.num))),
-                calc.sign,
-              ),
-            ).slice(0, 14),
+      res: !calc.res && calc.num ? calc.num : calc.res,
     }));
   };
 

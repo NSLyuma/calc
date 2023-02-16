@@ -41,6 +41,7 @@ body {
   border-radius: 18px;
   padding: 16px 48px 44px;
   max-width: 426px;
+  word-break: break-word;
 }
 
 .operations,
