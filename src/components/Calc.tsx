@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { btns } from '../btns';
 import Button from './Button';
 
-const removeSpaces = (num: number) => num.toString().replace(/\s/g, '');
+const removeSpaces = (num: number): string => num.toString().replace(/\s/g, '');
 
 type Calculate = {
   sign: string;
@@ -19,87 +19,89 @@ function Calc(): JSX.Element {
     opString: '',
   });
 
-  const math = (a: number, b: number, sign: string) =>
+  const math = (a: number, b: number, sign: string): number =>
     sign === '+'
       ? a + b
       : sign === '-'
       ? a - b
       : sign === 'x'
       ? a * b
+      : sign === '/'
+      ? a / b
       : sign === '√'
       ? a
       : sign === '%'
       ? a
-      : sign === '/'
-      ? a / b
       : b;
 
-  const numClickHandler = (btn: string) => {
+  const numClickHandler = (btn: string): void => {
     if (removeSpaces(Number(calc.num)).length < 11) {
       setCalc((prev) => ({
         ...calc,
-        opString: prev.opString + btn,
-        num: calc.num === 0 && btn === '0' ? '0' : calc.num + btn,
+        num: calc.num === 0 && btn === '0' ? 0 : calc.num + btn,
         res: !calc.sign ? 0 : Number(calc.res),
+        opString: calc.num === 0 ? prev.opString : prev.opString + btn,
       }));
     }
   };
 
-  const doubleZeroClickHandler = () => {
+  const doubleZeroClickHandler = (): void => {
     if (removeSpaces(Number(calc.num)).length < 11) {
       setCalc((prev) => ({
         ...calc,
-        opString: calc.num === 0 ? prev.opString : prev.opString + '00',
-        num: calc.num === 0 ? '0' : calc.num + '00',
+        num: calc.num === 0 ? 0 : calc.num + '00',
         res: !calc.sign ? 0 : calc.res,
+        opString: calc.num === 0 ? prev.opString : prev.opString + '00',
       }));
     }
   };
 
-  const commaClickHandler = () => {
+  const commaClickHandler = (): void => {
     setCalc((prev) => ({
       ...calc,
       num: !calc.num.toString().includes('.') ? prev.num + '.' : calc.num,
       opString: prev.opString + '.',
-      res: !calc.res && calc.num ? calc.num : calc.res,
+      res: !calc.res && calc.num ? Number(calc.num) : calc.res,
     }));
   };
 
-  const signClickHandler = (btn: string) => {
-    if (String(calc.num) === '0' && calc.sign === '/') {
-      setCalc({
-        ...calc,
-        sign: '',
-        num: 0,
-        res: 'Ошибка',
-        opString: '',
-      });
-    } else {
-      setCalc((prev) => ({
-        ...calc,
-        sign: btn,
-        res:
-          !calc.res && calc.num
-            ? Number(calc.num)
-            : String(
-                math(
-                  Number(removeSpaces(Number(calc.res))),
-                  Number(removeSpaces(Number(calc.num))),
-                  calc.sign,
-                ),
-              ).slice(0, 14),
-        num: 0,
-        opString:
-          String(Number(prev.opString.slice(-1))) === 'NaN' &&
-          prev.opString.slice(-1) !== ')' &&
-          prev.opString.slice(-1) !== '%'
-            ? prev.opString.slice(0, -1) + btn
-            : prev.opString + btn,
-      }));
+  const signClickHandler = (btn: string): void => {
+    if (calc.opString.length > 0) {
+      if (String(calc.num) === '0' && calc.sign === '/') {
+        setCalc({
+          ...calc,
+          sign: '',
+          num: 0,
+          res: 'Ошибка',
+          opString: '',
+        });
+      } else {
+        setCalc((prev) => ({
+          ...calc,
+          sign: btn,
+          res:
+            !calc.res && calc.num
+              ? Number(calc.num)
+              : String(
+                  math(
+                    Number(removeSpaces(Number(calc.res))),
+                    Number(removeSpaces(Number(calc.num))),
+                    calc.sign,
+                  ),
+                ).slice(0, 14),
+          num: 0,
+          opString:
+            String(Number(prev.opString.slice(-1))) === 'NaN' &&
+            prev.opString.slice(-1) !== ')' &&
+            prev.opString.slice(-1) !== '%'
+              ? prev.opString.slice(0, -1) + btn
+              : prev.opString + btn,
+        }));
+      }
     }
   };
 
-  const squareClickHandler = () => {
+  const squareClickHandler = (): void => {
     const matchNumber = /\d+$/.exec(calc.opString);
     if (matchNumber) {
       const lastNumber = matchNumber[0];
@@ -121,7 +123,7 @@ function Calc(): JSX.Element {
     }
   };
 
-  const percentClickHandler = () => {
+  const percentClickHandler = (): void => {
     setCalc((prev) => ({
       ...calc,
       num: (Number(prev.res) * Number(prev.num)) / 100,
@@ -150,7 +152,7 @@ function Calc(): JSX.Element {
     }));
   };
 
-  const resetClickHandler = () => {
+  const resetClickHandler = (): void => {
     setCalc({
       ...calc,
       sign: '',
@@ -160,7 +162,7 @@ function Calc(): JSX.Element {
     });
   };
 
-  const equalsClickHandler = () => {
+  const equalsClickHandler = (): void => {
     if (calc.sign && calc.num) {
       setCalc({
         ...calc,
@@ -181,7 +183,7 @@ function Calc(): JSX.Element {
     }
   };
 
-  const calculate = (btn: string) =>
+  const calculate = (btn: string): void =>
     btn === 'C'
       ? resetClickHandler()
       : btn === '%'
