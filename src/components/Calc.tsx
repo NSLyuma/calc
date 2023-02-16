@@ -29,7 +29,7 @@ function Calc(): JSX.Element {
       : sign === '√'
       ? Math.sqrt(b)
       : sign === '%'
-      ? b
+      ? a
       : a / b;
 
   const numClickHandler = (btn: string) => {
@@ -112,7 +112,8 @@ function Calc(): JSX.Element {
         num: 0,
         opString:
           String(Number(prev.opString.slice(-1))) === 'NaN' &&
-          prev.opString.slice(-1) !== ')'
+          prev.opString.slice(-1) !== ')' &&
+          prev.opString.slice(-1) !== '%'
             ? prev.opString.slice(0, -1) + btn
             : prev.opString + btn,
       }));
@@ -144,12 +145,37 @@ function Calc(): JSX.Element {
     let num = calc.num ? parseFloat(removeSpaces(Number(calc.num))) : 0;
     let res = calc.res ? parseFloat(removeSpaces(Number(calc.res))) : 0;
 
+    // setCalc((prev) => ({
+    //   ...calc,
+    //   num: (num /= Math.pow(100, 1)),
+    //   res: (res /= Math.pow(100, 1)),
+    //   sign: '%',
+    //   opString: prev.opString + Number(calc.res) / 100,
+    // }));
     setCalc((prev) => ({
       ...calc,
-      num: (num /= Math.pow(100, 1)),
-      res: (res /= Math.pow(100, 1)),
-      sign: '%',
-      opString: prev.opString + '%',
+      num: Number(prev.num) / 100,
+      res: String(
+        math(
+          Number(removeSpaces(Number(prev.num))),
+          Number(removeSpaces(Number(prev.num) / 100)),
+          calc.sign,
+        ),
+      ).slice(0, 14),
+      opString: prev.opString
+        .split('')
+        .reverse()
+        .join('')
+        .replace(
+          String(Number(calc.num)).split('').reverse().join(''),
+          String(Number(prev.num) / 100)
+            .split('')
+            .reverse()
+            .join(''),
+        )
+        .split('')
+        .reverse()
+        .join(''),
     }));
   };
 
