@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import { btns } from '../btns';
+import { btns } from '../helpers/btns';
+import { Calculate } from '../helpers/types';
 import Button from './Button';
 
 const removeSpaces = (num: number): string => num.toString().replace(/\s/g, '');
-
-type Calculate = {
-  sign: string;
-  num: number | string;
-  res: number | string;
-  opString: string;
-};
 
 function Calc(): JSX.Element {
   let [calc, setCalc] = useState<Calculate>({
@@ -40,7 +34,7 @@ function Calc(): JSX.Element {
         ...calc,
         num: calc.num === 0 && btn === '0' ? 0 : calc.num + btn,
         res: !calc.sign ? 0 : Number(calc.res),
-        opString: calc.num === 0 ? prev.opString : prev.opString + btn,
+        opString: prev.opString + btn,
       }));
     }
   };
